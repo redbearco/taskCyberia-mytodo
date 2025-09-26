@@ -28,8 +28,10 @@ export const TaskForm: React.FC<Props> = ({ initial = null, onCancel }) => {
 
     const [title, setTitle] = useState(initial?.title ?? "");
     const [description, setDescription] = useState(initial?.description ?? "");
-    const [category, setCategory] = useState<Category>(initial?.category ?? "Personal");
-    const [completed, setCompleted] = useState<boolean>(initial?.completed ?? false);
+    const [category, setCategory] = useState<Category>(
+        initial?.category ?? "Personal"
+    );
+    const [completed, setCompleted] = useState(initial?.completed ?? false);
 
     const titleRef = useRef<HTMLInputElement | null>(null);
     const [isPending, startTransition] = useTransition();
@@ -39,7 +41,6 @@ export const TaskForm: React.FC<Props> = ({ initial = null, onCancel }) => {
         setDescription(initial?.description ?? "");
         setCategory(initial?.category ?? "Personal");
         setCompleted(initial?.completed ?? false);
-
         titleRef.current?.focus();
     }, [initial]);
 
@@ -80,24 +81,30 @@ export const TaskForm: React.FC<Props> = ({ initial = null, onCancel }) => {
     );
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-3 p-4 bg-white rounded-md shadow">
+        <form
+            onSubmit={handleSubmit}
+            className="space-y-4 p-5 bg-white rounded-xl shadow-sm border"
+        >
             <TaskTitleInput ref={titleRef} value={title} onChange={setTitle} />
             <TaskDescriptionInput value={description} onChange={setDescription} />
 
-            <div className="flex gap-2 items-center">
+            <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
                 <TaskCategorySelect value={category} onChange={setCategory} />
-
                 <label className="flex items-center gap-2 text-sm">
                     <input
                         type="checkbox"
                         checked={completed}
                         onChange={(e) => setCompleted(e.target.checked)}
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <span>انجام شده</span>
                 </label>
-
                 <div className="ml-auto">
-                    <TaskFormActions isPending={isPending} isEdit={!!initial} onCancel={onCancel} />
+                    <TaskFormActions
+                        isPending={isPending}
+                        isEdit={!!initial}
+                        onCancel={onCancel}
+                    />
                 </div>
             </div>
         </form>
