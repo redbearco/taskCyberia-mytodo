@@ -6,6 +6,7 @@ import React, {
     useEffect,
     useCallback,
     useTransition,
+    useContext,
 } from "react";
 import type { Task, Category } from "@/lib/types";
 import { v4 as uuidv4 } from "uuid";
@@ -22,15 +23,11 @@ type Props = {
 };
 
 export const TaskForm: React.FC<Props> = ({ initial = null, onCancel }) => {
-    const ctx = React.useContext(TasksContext);
-    if (!ctx) return null;
-    const { dispatch } = ctx;
+    const ctx = useContext(TasksContext);
 
     const [title, setTitle] = useState(initial?.title ?? "");
     const [description, setDescription] = useState(initial?.description ?? "");
-    const [category, setCategory] = useState<Category>(
-        initial?.category ?? "Personal"
-    );
+    const [category, setCategory] = useState<Category>(initial?.category ?? "Personal");
     const [completed, setCompleted] = useState(initial?.completed ?? false);
 
     const titleRef = useRef<HTMLInputElement | null>(null);
@@ -63,12 +60,14 @@ export const TaskForm: React.FC<Props> = ({ initial = null, onCancel }) => {
                 dueDate: initial?.dueDate ?? null,
             };
 
+            if (!ctx) return;
+
             startTransition(() => {
                 if (initial) {
-                    dispatch({ type: "UPDATE", payload });
+                    ctx.dispatch({ type: "UPDATE", payload });
                     onCancel?.();
                 } else {
-                    dispatch({ type: "ADD", payload });
+                    ctx.dispatch({ type: "ADD", payload });
                 }
 
                 setTitle("");
@@ -77,8 +76,10 @@ export const TaskForm: React.FC<Props> = ({ initial = null, onCancel }) => {
                 setCompleted(false);
             });
         },
-        [title, description, category, completed, initial, dispatch, onCancel]
+        [title, description, category, completed, initial, ctx, onCancel]
     );
+
+    if (!ctx) return null;
 
     return (
         <form
