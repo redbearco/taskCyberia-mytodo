@@ -11,7 +11,11 @@ type Props = {
     onEdit?: (t: Task) => void;
 };
 
-export const TaskList: React.FC<Props> = ({ query = "", categoryFilter = null, onEdit }) => {
+export const TaskList: React.FC<Props> = ({
+    query = "",
+    categoryFilter = null,
+    onEdit,
+}) => {
     const ctx = useContext(TasksContext);
     if (!ctx) return null;
     const { tasks, dispatch } = ctx;
@@ -20,14 +24,18 @@ export const TaskList: React.FC<Props> = ({ query = "", categoryFilter = null, o
         const q = query.trim().toLowerCase();
         return tasks
             .filter((t) => {
-                if (categoryFilter && categoryFilter !== "All" && t.category !== categoryFilter) return false;
+                if (categoryFilter && categoryFilter !== "All" && t.category !== categoryFilter)
+                    return false;
                 if (!q) return true;
                 return (
                     t.title.toLowerCase().includes(q) ||
                     (t.description ?? "").toLowerCase().includes(q)
                 );
             })
-            .sort((a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt)));
+            .sort(
+                (a, b) =>
+                    Number(new Date(b.createdAt)) - Number(new Date(a.createdAt))
+            );
     }, [tasks, query, categoryFilter]);
 
     const handleToggle = useCallback(
@@ -45,9 +53,11 @@ export const TaskList: React.FC<Props> = ({ query = "", categoryFilter = null, o
     );
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-3">
             {filtered.length === 0 ? (
-                <div className="p-4 text-center text-slate-500">کاری یافت نشد</div>
+                <div className="p-4 text-center text-slate-500 bg-slate-100 rounded-lg">
+                     کاری یافت نشد
+                </div>
             ) : (
                 filtered.map((t) => (
                     <TaskItem
