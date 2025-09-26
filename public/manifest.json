@@ -1,0 +1,20 @@
+{
+    "name": "مدیریت کارها",
+    "short_name": "کارها",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "description": "مدیریت کارها مدیریت کارها مدیریت کارها مدیریت کارها",
+    "icons": [{
+            "src": "./vercel.svg",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "./vercel.svg",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

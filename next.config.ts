@@ -1,7 +1,17 @@
 import type { NextConfig } from "next/types";
+import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "2mb",
+    },
+  },
 };
 
-export default nextConfig;
+export default withPWA({
+  dest: "public", 
+  register: true,
+  skipWaiting: true,
+})(nextConfig);
