@@ -4,15 +4,22 @@ import { tasksReducer } from "./tasksReducer";
 import { loadTasks, saveTasks } from "@/services/storage";
 import type { Task } from "@/lib/types";
 
+export type TasksAction =
+    | { type: "LOAD"; payload: Task[] }
+    | { type: "TOGGLE"; payload: string }
+    | { type: "DELETE"; payload: string }
+    | { type: "ADD"; payload: Task }
+    | { type: "UPDATE"; payload: Task };
+
 type TasksContextType = {
     tasks: Task[];
-    dispatch: React.Dispatch<any>;
+    dispatch: React.Dispatch<TasksAction>;
 };
 
 export const TasksContext = createContext<TasksContextType | undefined>(undefined);
 
 export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [tasks, dispatch] = useReducer(tasksReducer, []);
+    const [tasks, dispatch] = useReducer(tasksReducer, [] as Task[]);
 
     useEffect(() => {
         const stored = loadTasks<Task[]>() ?? [];
@@ -20,7 +27,6 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             dispatch({ type: "LOAD", payload: stored });
         }
     }, []);
-
 
     useEffect(() => {
         saveTasks(tasks);
