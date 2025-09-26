@@ -5,23 +5,30 @@ import { loadTasks, saveTasks } from "@/services/storage";
 import type { Task } from "@/lib/types";
 
 type TasksContextType = {
-  tasks: Task[];
-  dispatch: React.Dispatch<any>;
+    tasks: Task[];
+    dispatch: React.Dispatch<any>;
 };
 
 export const TasksContext = createContext<TasksContextType | undefined>(undefined);
 
 export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const initial = (typeof window !== "undefined" ? loadTasks<Task[]>() ?? [] : []) as Task[];
-  const [tasks, dispatch] = useReducer(tasksReducer, initial);
+    const [tasks, dispatch] = useReducer(tasksReducer, []);
 
-  useEffect(() => {
-    saveTasks(tasks);
-  }, [tasks]);
+    useEffect(() => {
+        const stored = loadTasks<Task[]>() ?? [];
+        if (stored.length > 0) {
+            dispatch({ type: "LOAD", payload: stored });
+        }
+    }, []);
 
-  return (
-    <TasksContext.Provider value={{ tasks, dispatch }}>
-      {children}
-    </TasksContext.Provider>
-  );
+
+    useEffect(() => {
+        saveTasks(tasks);
+    }, [tasks]);
+
+    return (
+        <TasksContext.Provider value={{ tasks, dispatch }}>
+            {children}
+        </TasksContext.Provider>
+    );
 };
