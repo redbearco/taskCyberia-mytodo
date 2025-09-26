@@ -5,13 +5,15 @@ import type { Task } from "@/lib/types";
 import { TaskForm } from "@/components/task-form/TaskForm";
 import { TaskList } from "@/components/task-list/TaskList";
 
+
+const categories = ["All", "Personal", "Work", "Other"] as const;
+type Category = (typeof categories)[number];
+
 export default function Page() {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
 
-  const [category, setCategory] = useState<
-    "All" | "Personal" | "Work" | "Other"
-  >("All");
+  const [category, setCategory] = useState<Category>("All");
 
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
@@ -32,7 +34,7 @@ export default function Page() {
           className="w-full p-2 border rounded mb-4"
         />
         <div className="flex gap-2 mb-4">
-          {["All", "Personal", "Work", "Other"].map((c) => (
+          {categories?.map((c) => (
             <button
               key={c}
               onClick={() =>
